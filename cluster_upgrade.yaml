@@ -1,0 +1,35 @@
+#master node upgrade
+ssh <master_node> 
+k drain <node_name> --ignore-daemonsets #drain masternode
+sudo -i
+#upgrade kubeadm
+apt-mark unhold kubeadm
+apt-mark hold kubectl kubelet
+apt install kubeadm=1.32.1-1.1
+apt-mark hold kubeadm
+
+kubeadm upgrade plan #check upgrade plan
+kubeadm upgrade apply v1.32.1-1.1 #upgrade kubeadm  
+#upgrade kubelet and kubectl:
+apt show kubelet | grep 1.32.1 #show full version available
+apt install kubelet=1.32.1-1.1 kubectl=1.32.1-1.1
+apt-mark hold kubelet kubectl #hold the version
+service kubelet restart 
+k uncordon cks8930 # uncordon the master node
+
+#upgrade worker node:
+k drain <workernode> --ignore-daemonsets
+ssh <workernode>
+apt update
+kubeadm version
+apt-mark unhold kubeadm #unhold kubeadm
+apt-mark hold kubectl kubelet #hold the version
+apt install kubeadm=1.32.1-1.1 #upgrade kubeadm
+apt-mark hold kubeadm
+kubeadm upgrade node
+#upgrade kubelet and kubectl:
+apt-mark unhold kubectl kubelet
+apt install kubelet=1.32.1-1.1 kubectl=1.32.1-1.1
+service kubelet restart
+service kubelet status
+k uncordon <workernode> # uncordon the worker node

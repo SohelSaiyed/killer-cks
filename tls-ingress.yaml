@@ -1,0 +1,14 @@
+# create tls secret:
+ k -n team-pink create secret tls tls-secret --key tls.key --cert tls.crt
+
+#create tls-ingress:
+kubectl create ingress simple --rule="foo.com/bar=svc1:8080,tls=my-cert"  --dry-run=client -o yaml
+
+#update hostname and add tls secret in ingress:
+spec:
+  tls:                            # add
+    - hosts:                      # add
+      - secure-ingress.test       # add
+      secretName: tls-secret      # add
+  rules:
+  - host: secure-ingress.test

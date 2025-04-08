@@ -1,0 +1,11 @@
+#Get kubecontext:
+k config get-contexts
+
+#get name of the context:
+k config get-contexts -o name > /opt/course/1/contexts
+
+#see raw certificate:
+k config view --raw
+
+#Get raw certificate and save it to a file:
+k config view --raw -ojsonpath="{.users[2].user.client-certificate-data}" | base64 -d > /opt/course/1/cert

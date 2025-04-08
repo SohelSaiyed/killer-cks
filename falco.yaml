@@ -1,0 +1,38 @@
+#update falco out put:
+"%evt.time,%proc.name,%user.uid,%container.id,%container.name,%container.image"
+
+#check falco log
+cat /var/log/syslog | grep falco | grep shell
+or 
+sudo journalctl -fu falco
+
+
+
+# to change falco log location:
+Edit the file /etc/falco/falco.yaml to change the output channel. Disable standard output.
+
+file_output:
+  enabled: true
+  keep_alive: false
+  filename: /var/log/falco.log
+
+stdout_output:
+  enabled: false
+
+---
+
+#falcon rules dir:
+/etc/falco/rules.d/falco_custom.yaml
+
+#falcon log check:
+falco -U/--unbuffered | grep 'text'
+crictl ps -id <container_id> #find pod id
+crictl pods -id <pod_id> #find pod information
+
+#Update falco rules to update log:
+vi vim rules.d/falco_custom.yaml #open file
+<text_searched> %evt.time,%container.id,%container.name,%user.name #update log text as per requirement
+
+falco --list | grep user # to find available fields. 
+
+

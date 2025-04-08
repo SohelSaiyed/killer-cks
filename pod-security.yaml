@@ -1,0 +1,43 @@
+#run pod with read only access with allowing write access to /tmp: Immutable Pod:
+    spec:
+      containers:
+      - image: busybox:1.32.0
+        command: ['sh', '-c', 'tail -f /dev/null']
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        securityContext:                  # add
+          readOnlyRootFilesystem: true    # add
+        volumeMounts:                     # add
+        - mountPath: /tmp                 # add
+          name: temp-vol                  # add
+      volumes:                            # add
+      - name: temp-vol                    # add
+        emptyDir: {}                      # add
+
+#run as non root and disble privilege escalation:
+spec:
+  containers:
+  - image: bitnami/nginx:1.21.6
+    name: secured-container
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: RuntimeDefault
+
+#run the pod as privileged:
+    securityContext:
+      runAsNonRoot: true
+      privileged: true
+      allowPrivilegeEscalation: true
+
+#readonly root filesystem:
+        securityContext:                  # add
+          readOnlyRootFilesystem: true    # add
+
+#pod with not ServiceAccount Token:
+spec:
+  serviceAccountName: custom
+  automountServiceAccountToken: false

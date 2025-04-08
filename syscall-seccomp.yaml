@@ -1,0 +1,35 @@
+#default secomp profile
+apiVersion: v1
+kind: Pod
+metadata:
+  name: default-pod
+  labels:
+    app: default-pod
+spec:
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+  - name: test-container
+    image: hashicorp/http-echo:1.0
+    args:
+    - "-text=just made some more syscalls!"
+    securityContext:
+      allowPrivilegeEscalation: false
+
+---
+#audit profile:
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/audit.json
+
+# The log path on your computer might be different from "/var/log/syslog"
+tail -f /var/log/syslog | grep 'http-echo'
+
+#for any other profile just change the profile name in the pod spec:
+localhostProfile: profiles/violation.json
+
+#default profile location:
+vi /var/lib/seccopm/default.json

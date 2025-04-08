@@ -1,0 +1,41 @@
+#allow all egress:
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-from-frontend"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: frontend
+  egress:
+  - toEndpoints:
+    - {}
+---
+
+#alllow egress for matching labels:
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l3-egress-rule"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: frontend
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        role: backend
+
+---
+#allow all end points
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-from-frontend"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: frontend
+  egress:
+  - toEndpoints:
+    - {}

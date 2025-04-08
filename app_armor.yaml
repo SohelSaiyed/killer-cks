@@ -1,0 +1,39 @@
+#apply app armor profile:
+apparmor_parser -q <profile_name>
+
+#run deployment on the apparmon profile:
+    spec:
+      securityContext:
+        appArmorProfile:
+          type: Localhost
+          localhostProfile: docker-default
+      containers:
+
+#check apparmor profile active in the pod:
+k exec <pod_name> -n <ns> -- cat /proc/1/attr/current
+or 
+k exec <pod_name> -n <ns> -- aa-status | grep <profile_name> # check the status of the profile
+
+#verify the pod is running on the apparmor profile:
+crictl pods -namespace <ns> # get pod names 
+circtl ps | grep <pod_name> # get the container id
+crictl inspectp <container_id> | grep apparmor # check the apparmor profile
+
+#apparmor parser profile:
+apparmor_parser /root/profile
+
+#check status of apparmor:
+aa_status | grep <profile_name> # check the status of the profile
+
+#put profile in complain mode:
+aa_complain 
+
+#Put profile in enforce mode:
+aa-enforce <profile_name> # put profile in enforce mode
+
+#update profile if app producedsome more logs(syslogs):
+aa-logprof
+
+#generate new profile:
+aa-genprof <app_name> # generate new profile
+

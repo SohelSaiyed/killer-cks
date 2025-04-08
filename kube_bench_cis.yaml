@@ -1,0 +1,22 @@
+#check the node names:
+k get nodes
+
+#run kube-bench from master node:
+kube-bench run --targets=master
+
+#add --profiling in kube-controller-manager:
+ vim /etc/kubernetes/manifests/kube-controller-manager.yaml
+...
+    - --profiling=false            # add
+
+#check directory permission:
+ stat -c %U:%G /var/lib/etcd
+
+ #change dir permission:
+ chown etcd:etcd /var/lib/etcd
+
+ #run kube-bench from worker node:
+ kube-bench run --targets=node
+
+ #check kubelet config file:
+ ps -ef | grep kubelet

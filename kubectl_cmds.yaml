@@ -1,0 +1,42 @@
+#force delete pod:
+k -n team-red delete pod container-host-hacker-dbf989777-wm8fc --force --grace-period 0
+
+#Docker image add user and group:
+RUN addgroup -S myuser && adduser -S myuser -G myuser
+
+#get secret data:
+kubectl -n <ns> get secret <s_name> -o jsonpath='{.data}'
+
+#create secret:
+kubectl create secret generic <s_name> --from-literal=username=user1 --from-literal=password=dontknow -n <ns>
+
+# create role
+k -n applications create role <r_name> --verb create,delete --resource pods,deployments,sts
+
+# create role-binding
+k -n applications create rolebinding <rb_name> --role <r_name> --user <user>
+
+# create role-bindin with cluster-rol
+k -n <ns> create rolebinding <rb_name> --clusterrole <crole_name> --user <user>
+
+# create clusterrole:
+kubectl create clusterrole <cr_name> --verb=get,list,watch --resource=pods
+
+# create clusterrolebinding
+kubectl create clusterrolebinding <crb_name> --clusterrole=<cr_name> --user=<user> --user=<user2> --group=<g_name>
+
+#can-i
+kubectl auth can-i create deployments --namespace dev
+kubectl auth can-i list secrets --namespace dev --as dave
+kubectl auth can-i list secrets --namespace dev --as dave --as-group=dev-team
+
+#Linux commands:
+netstat -plnt | grep <port> #open ports
+lsof -i :<port> #check process using port
+ps -ef | grep <process_name> #check process
+ps aux # process and user
+systemctl list-units #list all services
+systemctl list-units --type=service --state=running #list all running services
+systemctl disable <service_name> #disable service
+cat /etc/passwd | grep <user_name> #check user who has login permission 
+kill -9 <pid> #kill process

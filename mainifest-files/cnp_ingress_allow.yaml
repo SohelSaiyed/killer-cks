@@ -1,0 +1,58 @@
+#default allow allow:
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-to-victim"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: victim
+  ingress:
+  - fromEndpoints:
+    - {}
+---
+#allow from one to another with matching labels:
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l3-rule"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: backend
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        role: frontend
+---
+
+#allow connection all end points
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-to-victim"
+spec:
+  endpointSelector:
+    matchLabels:
+      role: victim
+  ingress:
+  - fromEndpoints:
+    - {}
+---
+
+#allow endpoint access from matching labels:
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "requires-rule"
+specs:
+  - description: "For endpoints with env=prod, only allow if source also has label env=prod"
+    endpointSelector:
+      matchLabels:
+        env: prod
+    ingress:
+    - fromRequires:
+      - matchLabels:
+          env: prod
+---
+       

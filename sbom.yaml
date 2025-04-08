@@ -1,0 +1,17 @@
+#check bom installed:
+bom
+
+#Generate a SPDX-Json SBOM of image sbom:
+bom generate --image registry.k8s.io/kube-apiserver:v1.31.0 --format json --output <fileloction>
+
+#Genertate sbom with trivy:
+trivy image registry.k8s.io/kube-controller-manager:v1.31.0
+
+#trivy with specific formate to a file:
+trivy image --format <json|cyclonedx> --output <file_location> registry.k8s.io/kube-controller-manager:v1.31.0
+
+#Scan SBOM with Trivy
+trivy sbom <file_location>
+or trivy sbom --format json <file_location>
+#export to required location:
+trivy sbom --format json --output <output_location> <file_to_scan>
