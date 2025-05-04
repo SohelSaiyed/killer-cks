@@ -1,0 +1,36 @@
+#update kubelet config to set container log max size and max files:
+# kubectl -n kube-system edit cm kubelet-config
+apiVersion: v1
+data:
+  kubelet: |
+    apiVersion: kubelet.config.k8s.io/v1beta1
+    kind: KubeletConfiguration
+    ...
+    volumeStatsAggPeriod: 0s
+    containerLogMaxSize: 5Mi
+    containerLogMaxFiles: 3
+kind: ConfigMap
+metadata:
+  name: kubelet-config
+  namespace: kube-system
+
+#update kubelet config for exiting nodes on control-plane:
+#on master node:
+ps aux | grep kubelet
+find / | grep kubeadm or systemctl status kubelet
+#edit file: 
+cat /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+#update kubeadm config:
+kubeadm upgrade node phase kubelet-config --dry-run
+kubeadm upgrade node phase kubelet-config
+
+# check changes applied:
+grep containerLog /var/lib/kubelet/config.yaml
+service kubelet restart #restart kubelet
+
+#optional check:
+kubectl get --raw "/api/v1/nodes/cks8930/proxy/configz" | yq -p json -o json
+
+#on worker node:
+kubeadm upgrade node phase kubelet-config
+grep containerLog /var/lib/kubelet/config.yaml

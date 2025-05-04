@@ -1,4 +1,4 @@
-#allow all egress:
+#allow all endpoints:
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
@@ -26,16 +26,3 @@ spec:
     - matchLabels:
         role: backend
 
----
-#allow all end points
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: "allow-all-from-frontend"
-spec:
-  endpointSelector:
-    matchLabels:
-      role: frontend
-  egress:
-  - toEndpoints:
-    - {}
