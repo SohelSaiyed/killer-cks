@@ -1,0 +1,16 @@
+#Find processes of Pod
+k -n <ns> get pod -owide # check the node name where the pod is running
+# from worker node:
+crictl pods --name <deployment_name> # get the pod id
+crictl ps --pod <pod_id> # get the container id 
+crictl inspectp <container_id> | grep args -A1 # get the container process
+ps aux | grep collector1-process # get pid
+or 
+crictl inspect <container_id> | grep pid
+
+# process id:
+strace -p 14079 # check logs to see if any syscall is made
+
+#repeat the porcess above for all deployments and bring down the deployment:
+
+k -n <ns> scale deploy collector1 --replicas 0

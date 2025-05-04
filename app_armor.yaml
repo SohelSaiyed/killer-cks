@@ -47,4 +47,6 @@ aa-logprof # and new profile create to allow
 or
 aa-logprof -r /etc/apparmor.d/user.bin.curl # update profile
  
+#copy profile from master to worker node:
+scp /opt/course/9/profile <node_name>:~/
 

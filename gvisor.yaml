@@ -20,3 +20,6 @@ spec:
 
 #chech po running on gvisor or not 
 kubectl exec non-sandbox-pod -- dmesg 
+
+#stream the logs to file:
+k -n <ns> exec <pod_name> > /opt/filename -- dmesg
