@@ -28,6 +28,8 @@ spec:
         type: RuntimeDefault
 
 #run the pod as privileged:
+  containers:
+    ...
     securityContext:
       runAsNonRoot: true
       privileged: true
@@ -41,3 +43,17 @@ spec:
 spec:
   serviceAccountName: custom
   automountServiceAccountToken: false
+
+#run the pod with user and group id:
+sepc:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+    supplementalGroups: [4000]
+
+#run the pod with NET_ADMIN and SYS_TIME capabilities:   
+  containers:
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]

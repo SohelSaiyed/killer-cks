@@ -21,7 +21,20 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: sa-pod-api
+- kind: User
+  name: <user_name>
+  apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
   name: pod-operations-clusterrole
   apiGroup: rbac.authorization.k8s.io
+
+
+# create role
+kubectl -n applications create role <r_name> \
+  --verb=create,delete \
+  --resource=pods,deployments,statefulsets
+
+
+# create role-binding
+k -n applications create rolebinding <rb_name> --role <r_name> --user <user>

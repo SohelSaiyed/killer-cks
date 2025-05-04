@@ -1,3 +1,4 @@
+#### on worker node ####
 #default secomp profile
 apiVersion: v1
 kind: Pod
@@ -32,4 +33,12 @@ tail -f /var/log/syslog | grep 'http-echo'
 localhostProfile: profiles/violation.json
 
 #default profile location:
-vi /var/lib/seccopm/default.json
+vi /var/lib/seccopm/default.json 
+or 
+vi /var/lib/kubelet/seccomp/profiles/default.json
+
+#stract syscalls:
+ps aux | grep <process_name> #e.g etcd
+strace -p <pid> # get the pid of the process
+strace -p <pid> -f -cw # get the syscall
+pstree -p <pid> # get the process tree

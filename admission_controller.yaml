@@ -1,5 +1,5 @@
 #enable nodeRestriction admission controller on kube-apiserver:
-# --enable-admission-plugins=NodeRestriction
+# --enable-admission-plugins=NodeRestriction,ImagePolicyWebhook
 # --disable-admission-plugins=AlwaysPullImages
 
 #add nodelabel using kubeletconf:
@@ -9,7 +9,9 @@ ssh node01
     k label node controlplane killercoda/two=123 # restricted by default on different node
     k label node node01 test/two=123 # works because not restricted
 
-#admission-config
+---------------------------------------------
+
+#admission-config webhook full config steps:
 apiVersion: apiserver.config.k8s.io/v1
 kind: AdmissionConfiguration
 plugins:
@@ -22,3 +24,21 @@ plugins:
         denyTTL: 50
         retryBackoff: 500
         defaultAllow: true # if admission wehhook fails it will allow image to downloaed
+
+#path for admission config file:
+# /etc/kubernetes/admission/
+
+#vi to kube-apiserver.yaml
+# - --admission-control-config-file=/etc/kubernetes/admission/admission-config.yaml
+# --enable-admission-plugins=NodeRestriction,ImagePolicyWebhook
+
+# add volume for admission config file
+# volumes:
+   - name: admission-config
+     hostPath: 
+        path: /etc/kubernetes/admission
+        type: DirectoryOrCreate 
+# volumemounts:
+   - name: admission-config
+     mountPath: /etc/kubernetes/admission
+     readOnly: true

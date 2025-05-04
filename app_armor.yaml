@@ -1,3 +1,4 @@
+#### on worker node:
 #apply app armor profile:
 apparmor_parser -q <profile_name>
 
@@ -36,4 +37,14 @@ aa-logprof
 
 #generate new profile:
 aa-genprof <app_name> # generate new profile
+e.g aa-genprof nginx or curl 
+
+#profile location:
+/etc/apparmor.d/<profile_name> # e.g user.bin.curl
+
+#update profile to allow using aa-logprof:
+aa-logprof # and new profile create to allow
+or
+aa-logprof -r /etc/apparmor.d/user.bin.curl # update profile
+ 
 

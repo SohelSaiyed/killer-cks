@@ -1,3 +1,6 @@
+# create dir for audit in /etc/kubernetes/audit
+vi audit_policy.yaml
+---
 apiVersion: audit.k8s.io/v1 # This is required.
 kind: Policy
 # Don't generate audit events for all requests in RequestReceived stage.
@@ -72,3 +75,23 @@ rules:
 
 #check audit logs:
 cat /etc/kubernetes/audit/logs/audit.log | tail | jq
+
+# update kube-apiserver.yaml file:
+# add auditpolicy files in kube-apiserver.yaml
+- --audit-policy-file=/etc/kubernetes/audit/audit_policy.yaml
+- --audit-log-path=/etc/kubernetes/audit/logs/audit.log  
+- --audit-log-maxsize=100
+- --audit-log-maxage=30
+- --audit-log-maxbackup=10  
+
+# add volume for audit-policy and audit output logs file
+volumes:   
+  - name: audit-config     
+    hostPath:
+      path: /etc/kubernetes/audit
+      type: DirectoryOrCreate
+
+volumeMounts:     
+  - name: audit-config       
+    mountPath: /etc/kubernetes/audit
+    readOnly: false     

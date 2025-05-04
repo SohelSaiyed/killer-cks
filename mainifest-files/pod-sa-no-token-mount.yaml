@@ -11,3 +11,12 @@ spec:
     image: nginx:1.19.6-alpine
     ports:
     - containerPort: 80
+---
+
+#service-account with no automount token
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-robot
+automountServiceAccountToken: false
+...

@@ -2,10 +2,16 @@
 k config get-contexts
 
 #get name of the context:
-k config get-contexts -o name > /opt/course/1/contexts
+k config get-contexts -o name > <file_path>
 
 #see raw certificate:
 k config view --raw
 
 #Get raw certificate and save it to a file:
-k config view --raw -ojsonpath="{.users[2].user.client-certificate-data}" | base64 -d > /opt/course/1/cert
+k config view --raw -ojsonpath="{.users[2].user.client-certificate-data}" | base64 -d > <file_path>
+
+#connect to the cluster using the ca,crt and key:
+curl https://<k8s-master-ip>:6443 --cacert <file_path_ca.crt> --key <key_file_path> --cert <cert_file_path>
+
+#use kubeconfig file path to connect to the cluster:
+k --kubeconfig <file_path> get pods

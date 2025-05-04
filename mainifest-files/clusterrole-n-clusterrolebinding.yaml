@@ -20,3 +20,9 @@ roleRef:
   kind: ClusterRole
   name: operations-clusterrole
   apiGroup: rbac.authorization.k8s.io
+---
+
+#cluterrole binding with SA from namespace
+k create clusterrolebinding <name> \
+  --clusterrole=<clusterrole_name><e.g edit> \
+  --serviceaccount=<namespace>:<serviceaccount_name>

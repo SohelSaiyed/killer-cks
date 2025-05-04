@@ -47,3 +47,22 @@ spec:
     ports:
     - protocol: TCP
       port: 80 #port on which traffic is allowd.
+---
+#default-deny-all-ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  egress:
+  - to:
+    ports:
+    - protocol: TCP
+      port: 53 #DNS
+    - port: 53
+      protocol: UDP

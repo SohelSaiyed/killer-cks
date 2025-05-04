@@ -1,0 +1,16 @@
+#enable/disable anonymous auth: 
+#file path: vi  /etc/kubernetes/manifests/kube-apiserver.yaml
+- --anonymous-auth=true/false
+
+#insecure access enabled/disabled:
+- --insecure-port=8080 #enable
+- --insecure-port=0 #disable
+
+#node restriction:
+# 1. enable nodeRestriction admission controller on kube-apiserver:
+ --enable-admission-plugins=NodeRestriction
+ --disable-admission-plugins=AlwaysPullImages,PodNodeSelector       
+
+#image policy webhook:
+# 1. enable ImagePolicyWebhook admission controller on kube-apiserver:
+ --enable-admission-plugins=ImagePolicyWebhook

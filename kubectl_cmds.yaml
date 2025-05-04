@@ -8,7 +8,7 @@ RUN addgroup -S myuser && adduser -S myuser -G myuser
 kubectl -n <ns> get secret <s_name> -o jsonpath='{.data}'
 
 #create secret:
-kubectl create secret generic <s_name> --from-literal=username=user1 --from-literal=password=dontknow -n <ns>
+kubectl create secret generic <s_name> --from-literal username=user1 --from-literal password=dontknow -n <ns>
 
 # create role
 k -n applications create role <r_name> --verb create,delete --resource pods,deployments,sts
@@ -30,6 +30,10 @@ kubectl auth can-i create deployments --namespace dev
 kubectl auth can-i list secrets --namespace dev --as dave
 kubectl auth can-i list secrets --namespace dev --as dave --as-group=dev-team
 
+#get all images from running pods:
+k get pod -A -oyaml | grep "image:" | grep -v "f:"
+
+
 #Linux commands:
 netstat -plnt | grep <port> #open ports
 lsof -i :<port> #check process using port
@@ -38,5 +42,8 @@ ps aux # process and user
 systemctl list-units #list all services
 systemctl list-units --type=service --state=running #list all running services
 systemctl disable <service_name> #disable service
+whoami #check user
 cat /etc/passwd | grep <user_name> #check user who has login permission 
 kill -9 <pid> #kill process
+strace ls / #trace system calls
+strace -cw ls / #trace system calls and show summary
