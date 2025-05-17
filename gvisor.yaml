@@ -12,7 +12,8 @@ spec:
 
 
 #dry run the pod:
-k -n team-purple run gvisor-test --image=nginx:1.19.2 $do > 10_pod.yaml
+k -n <ns> run <p_name> --image=nginx:1.19.2 --dry-run=client -o yaml
+
 # and add following line:
 spec:
   nodeName: cluster1-node2 # add

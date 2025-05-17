@@ -7,3 +7,27 @@ metadata:
 type: kubernetes.io/service-account-token
 data:
   extra: YmFyCg==
+---
+
+#serviceaccount with token
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: build-robot
+automountServiceAccountToken: true
+
+---
+#pod with serviceaccount and token
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  serviceAccountName: build-robot
+  automountServiceAccountToken: false
+
+---
+#create role
+k create role <name> --verb=update --resource=namespaces -n <ns> --dry-run=client -oyaml
+#create rolebinding with SA
+k create rolebinding <name> --role=<name> --serviceaccount=<ns>:<r_name> -n <ns> --dry-run=client -o yaml 
