@@ -1,0 +1,46 @@
+Creat CSR and user:
+openssl genrsa -out 60099.key 2048
+openssl req -new -key 60099.key -out 60099.csr
+# set Common Name = 60099@internal.users
+
+
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: {{CN_NAME}} # ADD
+spec:
+  groups:
+  - system:authenticated
+  request: {{BASE_64_ENCODED_CSR}} # ADD
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth
+
+k get csr # pending
+k certificate approve 60099@internal.users
+k get csr # approved
+k get csr 60099@internal.users -ojsonpath="{.status.certificate}" | base64 -d > 60099.crt
+
+
+k config set-credentials 60099@internal.users --client-key=60099.key --client-certificate=60099.crt
+k config set-context 60099@internal.users --cluster=kubernetes --user=60099@internal.users
+k config get-contexts
+k config use-context 60099@internal.users
+k get ns # fails because no permissions, but shows the correct username returned
+
+
+Manually:
+
+openssl genrsa -out 60099.key 2048
+openssl req -new -key 60099.key -out 60099.csr
+# set Common Name = 60099@internal.users
+
+find /etc/kubernetes/pki | grep ca
+openssl x509 -req -in 60099.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out 60099.crt -days 500
+
+
+k config set-credentials 60099@internal.users --client-key=60099.key --client-certificate=60099.crt
+k config set-context 60099@internal.users --cluster=kubernetes --user=60099@internal.users
+k config get-contexts
+k config use-context 60099@internal.users
+k get ns # fails because no permissions, but shows the correct username returned

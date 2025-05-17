@@ -8,6 +8,7 @@
       - --audit-log-path=/var/log/k8s-audit/k8s-audit.log     
       - --audit-log-maxage=30    
       - --audit-log-maxbackup=10
+      - --audit-log-maxsize=7
 
   # ADD volume for audit-policy and audit output logs file
     volumes:   

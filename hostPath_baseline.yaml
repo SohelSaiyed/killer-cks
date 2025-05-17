@@ -1,5 +1,9 @@
 #add lable to ns to add the baseline:
 kubectl label ns <ns_name> pod-security.kubernetes.io/enforce=baseline
 
+privileged – Unrestricted
+baseline – Minimally restrictive
+restricted – Heavily locked down
+
 #get log of replica count after delete the pod:
 k -n team-red describe rs container-host-hacker-dbf989777

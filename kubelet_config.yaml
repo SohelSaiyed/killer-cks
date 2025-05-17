@@ -34,3 +34,10 @@ kubectl get --raw "/api/v1/nodes/cks8930/proxy/configz" | yq -p json -o json
 #on worker node:
 kubeadm upgrade node phase kubelet-config
 grep containerLog /var/lib/kubelet/config.yaml
+
+#add node label with kubelet config from worker nodes::
+export KUBECONFIG=/etc/kubernetes/kubelet.conf
+k label node node01 node-restriction.kubernetes.io/two=123 # restricted
+# to restrict kubelet from adding label to node:
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+    - --enable-admission-plugins=NodeRestriction
